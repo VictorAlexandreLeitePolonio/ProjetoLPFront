@@ -1,0 +1,102 @@
+@import "tailwindcss";
+@import "@fontsource/crimson-text/400.css";
+@import "@fontsource/crimson-text/600.css";
+@import "@fontsource/crimson-text/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+
+:root {
+  /* Paleta Oficial - ProjetoLP */
+  --color-primary: #1a4a3a;
+  --color-primary-dark: #143d2f;
+  --color-primary-light: #2d5a4a;
+  --color-secondary: #1a2a4a;
+  --color-secondary-dark: #121d33;
+  --color-white: #ffffff;
+  --color-gray-50: #f8faf9;
+  --color-gray-100: #f0f4f2;
+  --color-gray-200: #e2ebe6;
+  --color-gray-600: #4a6354;
+  --color-gray-800: #2a3d33;
+  
+  /* Tipografia */
+  --font-serif: "Crimson Text", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  
+  /* Sombras físicas */
+  --shadow-sm: 2px 2px 0 0 rgba(26, 42, 74, 0.15);
+  --shadow-md: 4px 4px 0 0 rgba(26, 42, 74, 0.2);
+  --shadow-lg: 6px 6px 0 0 rgba(26, 42, 74, 0.25);
+  
+  /* Bordas */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}
+
+@theme inline {
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-secondary);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+body {
+  background: var(--color-white);
+  color: var(--color-secondary);
+  font-family: var(--font-sans);
+}
+
+/* Estilos rústicos funcionais */
+.card-rustic {
+  background: var(--color-white);
+  border: 2px solid var(--color-secondary);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-sm);
+}
+
+.input-rustic {
+  background: var(--color-white);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-serif);
+  transition: all 0.15s ease;
+}
+
+.input-rustic:focus {
+  border-color: var(--color-primary);
+  box-shadow: 3px 3px 0 0 var(--color-primary);
+  outline: none;
+}
+
+.btn-rustic {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: 2px solid var(--color-primary-dark);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.btn-rustic:hover {
+  background: var(--color-primary-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-rustic:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.text-serif {
+  font-family: var(--font-serif);
+}
+
+.border-rustic {
+  border: 2px solid var(--color-secondary);
+}
