@@ -23,8 +23,8 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
   ({ label, error, id, disabled, value, onChange, onBlur, type = "text", ...rest }, ref) => {
     return (
       <motion.div variants={fadeSlideUp} className="flex flex-col gap-2">
-        <label 
-          htmlFor={id} 
+        <label
+          htmlFor={id}
           className={`text-sm font-semibold tracking-wide uppercase ${disabled ? "text-gray-400" : "text-[#1a2a4a]"}`}
           style={{ fontFamily: "var(--font-serif)" }}
         >
@@ -38,7 +38,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           type={type}
           step={rest.step}
           disabled={disabled}
-          value={value || ""}
+          {...(value !== undefined ? { value } : {})}
           onChange={onChange}
           onBlur={onBlur}
           whileFocus={disabled ? undefined : { scale: 1.005 }}

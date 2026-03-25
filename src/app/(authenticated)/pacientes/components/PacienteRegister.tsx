@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -9,6 +9,8 @@ import { FormField } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/Button";
 import { PacienteSchema, PacienteFormData } from "../schemas/paciente.schema";
 import { usePacienteInsert } from "../hooks/insert";
+import { maskCPF, maskRG, maskPhone, maskCEP } from "@/utils/masks";
+import { unformatCPF, unformatRG, unformatPhone, unformatCEP } from "@/utils/formatters";
 
 interface Props {
   onBack: () => void;
@@ -20,6 +22,7 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<PacienteFormData>({
@@ -28,7 +31,14 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
 
   const onSubmit = async (data: PacienteFormData) => {
     try {
-      await insertPaciente(data);
+      const payload = {
+        ...data,
+        cpf:   unformatCPF(data.cpf),
+        rg:    data.rg ? unformatRG(data.rg) : "",
+        phone: unformatPhone(data.phone),
+        cep:   unformatCEP(data.cep),
+      };
+      await insertPaciente(payload);
       toast.success("Paciente cadastrado com sucesso!");
       onSave();
     } catch {
@@ -44,13 +54,63 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
         <FormSection title="Dados Pessoais">
           <FormField label="Nome *" error={errors.name?.message} {...register("name")} />
           <FormField label="E-mail *" error={errors.email?.message} {...register("email")} />
-          <FormField label="CPF *" error={errors.cpf?.message} {...register("cpf")} />
-          <FormField label="RG" {...register("rg")} />
-          <FormField label="Telefone *" error={errors.phone?.message} {...register("phone")} />
+
+          <Controller
+            control={control}
+            name="cpf"
+            render={({ field }) => (
+              <FormField
+                label="CPF *"
+                error={errors.cpf?.message}
+                value={field.value ?? ""}
+                onChange={(e) => field.onChange(maskCPF(e.target.value))}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="rg"
+            render={({ field }) => (
+              <FormField
+                label="RG"
+                value={field.value ?? ""}
+                onChange={(e) => field.onChange(maskRG(e.target.value))}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field }) => (
+              <FormField
+                label="Telefone *"
+                error={errors.phone?.message}
+                value={field.value ?? ""}
+                onChange={(e) => field.onChange(maskPhone(e.target.value))}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
         </FormSection>
 
         <FormSection title="Endereço">
-          <FormField label="CEP *" error={errors.cep?.message} {...register("cep")} />
+          <Controller
+            control={control}
+            name="cep"
+            render={({ field }) => (
+              <FormField
+                label="CEP *"
+                error={errors.cep?.message}
+                value={field.value ?? ""}
+                onChange={(e) => field.onChange(maskCEP(e.target.value))}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
           <FormField label="Rua *" error={errors.rua?.message} {...register("rua")} />
           <FormField label="Número *" error={errors.numero?.message} {...register("numero")} />
           <FormField label="Bairro *" error={errors.bairro?.message} {...register("bairro")} />
