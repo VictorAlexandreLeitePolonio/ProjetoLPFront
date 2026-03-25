@@ -8,7 +8,7 @@ import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
 import { FilterPopover, FilterOption, FilterValues } from "@/components/ui/FilterPopover";
 import { Button } from "@/components/ui/Button";
 import { ActionsDropdown } from "@/components/ui/ActionsDropdown";
-import { Eye, Trash2 } from "lucide-react";
+import { Eye, Trash2, Check, Minus } from "lucide-react";
 import { usePagamentosPaginated, PagamentoFilters } from "../hooks/pagined";
 import { Pagination } from "@/components/ui/Pagination";
 import { usePagamentoDelete } from "../hooks/delete";
@@ -130,6 +130,24 @@ export default function PagamentoList({ onCreate, onViewDetails }: Props) {
       render: (p) => formatCurrency(p.planAmount),
     },
     { key: "referenceMonth", label: "Mês Ref." },
+    {
+      key: "paymentDate",
+      label: "Vencimento",
+      render: (p) => {
+        if (!p.paymentDate) return "-";
+        const paymentDate = new Date(p.paymentDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (paymentDate < today && p.status === "Pending") {
+          return (
+            <span className="px-2 py-1 rounded-sm text-xs font-semibold border-2 bg-red-100 text-red-700 border-red-200">
+              Vencido
+            </span>
+          );
+        }
+        return formatDate(p.paymentDate);
+      },
+    },
     { key: "paymentMethod", label: "Método" },
     {
       key: "status",
@@ -152,6 +170,19 @@ export default function PagamentoList({ onCreate, onViewDetails }: Props) {
       key: "paidAt",
       label: "Data Pagamento",
       render: (p) => (p.paidAt ? formatDate(p.paidAt) : "-"),
+    },
+    {
+      key: "paymentReminderSent",
+      label: "Lembrete",
+      render: (p) => (
+        <span className="flex justify-center">
+          {p.paymentReminderSent ? (
+            <Check size={18} className="text-green-600" />
+          ) : (
+            <Minus size={18} className="text-gray-400" />
+          )}
+        </span>
+      ),
     },
     {
       key: "actions",

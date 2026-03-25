@@ -14,6 +14,7 @@ import { Patient, PagedResult } from "@/types";
 import api from "@/lib/api";
 import { formatCurrency } from "@/utils/formatters";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   onBack: () => void;
@@ -28,14 +29,16 @@ const paymentStatusOptions = [
 
 const paymentMethodOptions = [
   "Dinheiro",
+  "Cartão",
   "Cartão de Crédito",
   "Cartão de Débito",
-  "PIX",
+  "Pix",
   "Boleto",
   "Transferência",
 ];
 
 export default function PagamentoRegister({ onBack, onSave }: Props) {
+  const { user } = useAuth();
   const { insertPagamento, isPending } = usePagamentoInsert();
   const { data: planos, loading: loadingPlanos } = usePlanos();
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -54,6 +57,7 @@ export default function PagamentoRegister({ onBack, onSave }: Props) {
       referenceMonth: "",
       paymentMethod: "",
       status: "Pending",
+      paymentDate: null,
     },
   });
 
@@ -62,6 +66,7 @@ export default function PagamentoRegister({ onBack, onSave }: Props) {
   const planId = watch("planId");
   const referenceMonth = watch("referenceMonth");
   const paymentMethod = watch("paymentMethod");
+  const paymentDate = watch("paymentDate");
 
   const selectedPlan = planos.find((p) => p.id === planId);
 
@@ -82,7 +87,8 @@ export default function PagamentoRegister({ onBack, onSave }: Props) {
 
   const onSubmit = async (data: PagamentoFormData) => {
     try {
-      await insertPagamento(data);
+      // userId vem do contexto de autenticação — não é preenchido pelo usuário no form.
+      await insertPagamento({ ...data, userId: user?.id ?? 0 });
       toast.success("Pagamento cadastrado com sucesso!");
       onSave();
     } catch {
@@ -223,6 +229,18 @@ export default function PagamentoRegister({ onBack, onSave }: Props) {
               <span className="text-xs text-red-600">{errors.status.message}</span>
             )}
           </div>
+
+          {/* Data de Vencimento (opcional) */}
+          <FormField
+            label="Data de Vencimento (opcional)"
+            id="paymentDate"
+            type="date"
+            value={paymentDate || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              setValue("paymentDate", value ? value : null, { shouldValidate: true });
+            }}
+          />
 
           {/* Data de Pagamento (apenas se status for Pago) */}
           {status === "Paid" && (

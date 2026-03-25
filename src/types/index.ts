@@ -42,6 +42,8 @@ export interface Payment {
   paymentMethod: string;
   status: PaymentStatus;
   paidAt: string | null;
+  paymentDate: string | null;
+  paymentReminderSent: boolean;
   createdAt: string;
 }
 
@@ -52,6 +54,7 @@ export interface CreatePaymentDto {
   paymentMethod: string;
   status: PaymentStatus;
   paidAt?: string;
+  paymentDate?: string | null;
 }
 
 export interface Patient {
@@ -105,6 +108,72 @@ export interface MedicalRecord {
   contrato: string;
   orientacaoDomiciliar: string;
   createdAt: string;
+}
+
+// ─── Perfil do Paciente (360°) ─────────────────────────────────────────────
+
+export interface PatientProfileAppointment {
+  id: number;
+  appointmentDate: string;
+  status: "Scheduled" | "Completed" | "Cancelled";
+  userName: string;
+  createdAt: string;
+}
+
+export interface PatientProfileMedicalRecord {
+  id: number;
+  titulo: string;
+  sessao: string;
+  patologia: string;
+  userName: string;
+  createdAt: string;
+}
+
+export interface PatientProfilePayment {
+  id: number;
+  referenceMonth: string;
+  planName: string;
+  amount: number;
+  paymentMethod: string;
+  status: "Pending" | "Paid" | "Cancelled";
+  paymentDate: string | null;
+  paidAt: string | null;
+  paymentReminderSent: boolean;
+  createdAt: string;
+}
+
+export interface PatientProfile {
+  id: number;
+  name: string;
+  email: string;
+  cpf: string;
+  rg: string;
+  phone: string;
+  rua: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  cep: string;
+  isActive: boolean;
+  createdAt: string;
+  appointments: PatientProfileAppointment[];
+  medicalRecords: PatientProfileMedicalRecord[];
+  payments: PatientProfilePayment[];
+}
+
+// ─── WhatsApp Logs ─────────────────────────────────────────────────────────
+
+export interface WhatsAppLogItem {
+  id: number;
+  patientId: number | null;
+  patientName: string | null;
+  phone: string;
+  message: string;
+  type: "AppointmentReminder" | "PaymentReminder";
+  success: boolean;
+  errorMessage: string | null;
+  sentAt: string;
 }
 
 // ─── Módulo Financeiro ─────────────────────────────────────────────────────

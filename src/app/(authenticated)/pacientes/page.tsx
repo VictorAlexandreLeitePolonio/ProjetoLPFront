@@ -6,8 +6,9 @@ import { AnimatePresence, motion } from "motion/react";
 import PacienteList from "./components/PacienteList";
 import PacienteRegister from "./components/PacienteRegister";
 import PacienteDetails from "./components/PacienteDetails";
+import PacienteProfile from "./components/PacienteProfile";
 
-type ViewMode = "list" | "create" | "view";
+type ViewMode = "list" | "create" | "view" | "profile";
 
 function PacientesPage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ function PacientesPage() {
               onCreate={() => goTo("create")}
               onViewDetails={(id) => goTo("view", id)}
               onVerProntuarios={(patientId) => router.push(`/prontuarios?mode=cards&patientId=${patientId}`)}
+              onVerPerfil={(patientId) => goTo("profile", patientId)}
             />
           </motion.div>
         )}
@@ -61,6 +63,18 @@ function PacientesPage() {
             transition={{ duration: 0.2 }}
           >
             <PacienteDetails id={id} onBack={() => goTo("list")} onSave={() => goTo("list")} />
+          </motion.div>
+        )}
+
+        {mode === "profile" && id && (
+          <motion.div
+            key="profile"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <PacienteProfile id={id} onBack={() => goTo("list")} />
           </motion.div>
         )}
       </AnimatePresence>

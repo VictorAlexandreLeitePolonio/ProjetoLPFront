@@ -8,7 +8,7 @@ import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
 import { FilterPopover, FilterOption, FilterValues } from "@/components/ui/FilterPopover";
 import { Button } from "@/components/ui/Button";
 import { ActionsDropdown } from "@/components/ui/ActionsDropdown";
-import { Eye, CheckCircle, XCircle, Trash2 } from "lucide-react";
+import { Eye, CheckCircle, XCircle, Trash2, List, CalendarDays } from "lucide-react";
 import { useAgendaPaginated, AgendaFilters } from "../hooks/pagined";
 import { Pagination } from "@/components/ui/Pagination";
 import { useAgendaDelete } from "../hooks/delete";
@@ -19,6 +19,8 @@ import { Appointment } from "@/types";
 interface Props {
   onCreate: () => void;
   onViewDetails: (id: number) => void;
+  viewMode?: "list" | "calendar";
+  onChangeViewMode?: (mode: "list" | "calendar") => void;
 }
 
 const statusOptions = [
@@ -27,7 +29,7 @@ const statusOptions = [
   { value: "Cancelled", label: "Cancelado" },
 ];
 
-export default function AgendaList({ onCreate, onViewDetails }: Props) {
+export default function AgendaList({ onCreate, onViewDetails, viewMode = "list", onChangeViewMode }: Props) {
   const {
     data,
     page,
@@ -206,6 +208,34 @@ export default function AgendaList({ onCreate, onViewDetails }: Props) {
         title="Agenda"
         actions={
           <div className="flex gap-2">
+            <div className="flex items-center bg-white border-2 border-[#e2ebe6] rounded-sm">
+              <button
+                type="button"
+                onClick={() => onChangeViewMode?.("list")}
+                className={`relative flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all border-r border-[#e2ebe6] last:border-r-0 ${
+                  viewMode === "list"
+                    ? "bg-[#1a4a3a] text-white"
+                    : "bg-white text-[#4a6354] hover:bg-[#f0f4f2]"
+                }`}
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
+                <List size={16} />
+                Lista
+              </button>
+              <button
+                type="button"
+                onClick={() => onChangeViewMode?.("calendar")}
+                className={`relative flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all ${
+                  viewMode === "calendar"
+                    ? "bg-[#1a4a3a] text-white"
+                    : "bg-white text-[#4a6354] hover:bg-[#f0f4f2]"
+                }`}
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
+                <CalendarDays size={16} />
+                Calendário
+              </button>
+            </div>
             <FilterPopover
               filters={filterOptions}
               values={filterValues}
@@ -218,6 +248,8 @@ export default function AgendaList({ onCreate, onViewDetails }: Props) {
         }
       />
 
+      {viewMode === "list" && (
+        <>
       <SearchInput
         value={search}
         onChange={setSearch}
@@ -231,6 +263,8 @@ export default function AgendaList({ onCreate, onViewDetails }: Props) {
         emptyMessage="Nenhum agendamento encontrado."
         keyExtractor={(a) => a.id}
       />
+      </>
+      )}
 
       <Pagination
         page={page}
@@ -240,39 +274,43 @@ export default function AgendaList({ onCreate, onViewDetails }: Props) {
         onPageSizeChange={setPageSize}
       />
 
-      <DeleteConfirmDialog
-        open={!!toDelete}
-        entityLabel="agendamento"
-        name={`de ${toDelete?.patientName ?? ""}`}
-        loading={deleting}
-        onClose={() => setToDelete(null)}
-        onConfirm={handleConfirmDelete}
-      />
+      {viewMode === "list" && (
+        <>
+          <DeleteConfirmDialog
+            open={!!toDelete}
+            entityLabel="agendamento"
+            name={`de ${toDelete?.patientName ?? ""}`}
+            loading={deleting}
+            onClose={() => setToDelete(null)}
+            onConfirm={handleConfirmDelete}
+          />
 
-      {/* Status Change Modal */}
-      {toChangeStatus && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white p-6 rounded-sm shadow-lg max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">Alterar Status</h3>
-            <p className="text-gray-600 mb-6">
-              Deseja alterar o status do agendamento de <strong>{toChangeStatus.patientName}</strong> para <strong>
-                {newStatus === "Completed" ? "Completo" : "Cancelado"}
-              </strong>?
-            </p>
-            <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setToChangeStatus(null)}>
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleConfirmChangeStatus} 
-                loading={changingStatus}
-                variant={newStatus === "Cancelled" ? "danger" : "primary"}
-              >
-                Confirmar
-              </Button>
+          {/* Status Change Modal */}
+          {toChangeStatus && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+              <div className="bg-white p-6 rounded-sm shadow-lg max-w-md w-full">
+                <h3 className="text-lg font-semibold mb-4">Alterar Status</h3>
+                <p className="text-gray-600 mb-6">
+                  Deseja alterar o status do agendamento de <strong>{toChangeStatus.patientName}</strong> para <strong>
+                    {newStatus === "Completed" ? "Completo" : "Cancelado"}
+                  </strong>?
+                </p>
+                <div className="flex gap-2 justify-end">
+                  <Button variant="outline" onClick={() => setToChangeStatus(null)}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    onClick={handleConfirmChangeStatus} 
+                    loading={changingStatus}
+                    variant={newStatus === "Cancelled" ? "danger" : "primary"}
+                  >
+                    Confirmar
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </div>
   );

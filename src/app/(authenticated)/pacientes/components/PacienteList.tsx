@@ -9,7 +9,7 @@ import { StatusToggleModal } from "@/components/ui/StatusToggleModal";
 import { FilterPopover, FilterOption, FilterValues } from "@/components/ui/FilterPopover";
 import { Button } from "@/components/ui/Button";
 import { ActionsDropdown } from "@/components/ui/ActionsDropdown";
-import { Eye, Power, Trash2, FileText } from "lucide-react";
+import { Eye, Power, Trash2, FileText, UserCircle } from "lucide-react";
 import { usePacientesPaginated, PacienteFilters } from "../hooks/pagined";
 import { Pagination } from "@/components/ui/Pagination";
 import { usePacienteDelete } from "../hooks/delete";
@@ -21,6 +21,7 @@ interface Props {
   onCreate: () => void;
   onViewDetails: (id: number) => void;
   onVerProntuarios?: (id: number) => void;
+  onVerPerfil?: (id: number) => void;
 }
 
 const appointmentStatusOptions = [
@@ -35,7 +36,7 @@ const paymentStatusOptions = [
   { value: "Cancelled", label: "Cancelado" },
 ];
 
-export default function PacienteList({ onCreate, onViewDetails, onVerProntuarios }: Props) {
+export default function PacienteList({ onCreate, onViewDetails, onVerProntuarios, onVerPerfil }: Props) {
   const {
     data,
     page,
@@ -200,6 +201,11 @@ export default function PacienteList({ onCreate, onViewDetails, onVerProntuarios
       render: (p) => (
         <ActionsDropdown
           actions={[
+            {
+              label: "Ver Perfil",
+              onClick: () => onVerPerfil?.(p.id),
+              icon: <UserCircle size={14} />,
+            },
             {
               label: "Detalhes",
               onClick: () => onViewDetails(p.id),

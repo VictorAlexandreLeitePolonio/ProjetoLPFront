@@ -11,7 +11,7 @@ export function usePagamentoInsert() {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const insertPagamento = useCallback(async (payload: PagamentoFormData): Promise<Payment> => {
+  const insertPagamento = useCallback(async (payload: PagamentoFormData & { userId: number }): Promise<Payment> => {
     setIsPending(true);
     setError(null);
     try {

@@ -13,6 +13,7 @@ interface DataTableProps<T> {
   loading?: boolean;
   emptyMessage?: string;
   keyExtractor: (row: T) => string | number;
+  onRowClick?: (row: T) => void;
 }
 
 export function DataTable<T>({
@@ -21,6 +22,7 @@ export function DataTable<T>({
   loading,
   emptyMessage = "Nenhum item encontrado.",
   keyExtractor,
+  onRowClick,
 }: DataTableProps<T>) {
   if (loading) {
     return (
@@ -64,7 +66,8 @@ export function DataTable<T>({
           {data.map((row) => (
             <tr 
               key={keyExtractor(row)} 
-              className="border-b border-[#e2ebe6] hover:bg-[#f8faf9] transition-colors"
+              className={`border-b border-[#e2ebe6] hover:bg-[#f8faf9] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
+              onClick={() => onRowClick?.(row)}
             >
               {columns.map((col) => (
                 <td 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -7,7 +8,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { FormSection } from "@/components/ui/FormSection";
 import { FormField } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/Button";
-import { PacienteSchema, PacienteFormData } from "../schemas/paciente.schema";
+import { PacienteSchema, PacienteFormData, step1Fields } from "../schemas/paciente.schema";
 import { usePacienteInsert } from "../hooks/insert";
 import { maskCPF, maskRG, maskPhone, maskCEP } from "@/utils/masks";
 import { unformatCPF, unformatRG, unformatPhone, unformatCEP } from "@/utils/formatters";
@@ -19,11 +20,13 @@ interface Props {
 
 export default function PacienteRegister({ onBack, onSave }: Props) {
   const { insertPaciente, isPending } = usePacienteInsert();
+  const [step, setStep] = useState<1 | 2>(1);
 
   const {
     register,
     control,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<PacienteFormData>({
     resolver: zodResolver(PacienteSchema),
@@ -46,11 +49,73 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
     }
   };
 
+  const goToNextStep = async () => {
+    const isValid = await trigger(step1Fields as unknown as (keyof PacienteFormData)[]);
+    if (isValid) {
+      setStep(2);
+    }
+  };
+
+  const goToPreviousStep = () => {
+    setStep(1);
+  };
+
   return (
     <div className="space-y-6 max-w-3xl">
       <PageHeader title="Novo Paciente" onBack={onBack} />
 
+      {/* Indicador de Progresso */}
+      <div className="flex items-center justify-center gap-4 py-4">
+        {/* Step 1 */}
+        <div className="flex items-center gap-2">
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+              step === 1
+                ? "bg-[#1a4a3a] text-white"
+                : "bg-white border-2 border-[#1a4a3a] text-[#1a4a3a]"
+            }`}
+          >
+            1
+          </div>
+          <span
+            className={`text-sm font-medium ${
+              step === 1 ? "text-[#1a4a3a]" : "text-[#4a6354]"
+            }`}
+          >
+            Dados Pessoais
+          </span>
+        </div>
+
+        {/* Linha conectora */}
+        <div
+          className={`w-16 h-0.5 transition-colors ${
+            step === 2 ? "bg-[#1a4a3a]" : "bg-[#e2ebe6]"
+          }`}
+        />
+
+        {/* Step 2 */}
+        <div className="flex items-center gap-2">
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+              step === 2
+                ? "bg-[#1a4a3a] text-white"
+                : "bg-white border-2 border-[#1a4a3a] text-[#1a4a3a]"
+            }`}
+          >
+            2
+          </div>
+          <span
+            className={`text-sm font-medium ${
+              step === 2 ? "text-[#1a4a3a]" : "text-[#4a6354]"
+            }`}
+          >
+            Endereço
+          </span>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {step === 1 && (
         <FormSection title="Dados Pessoais">
           <FormField label="Nome *" error={errors.name?.message} {...register("name")} />
           <FormField label="E-mail *" error={errors.email?.message} {...register("email")} />
@@ -96,7 +161,9 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
             )}
           />
         </FormSection>
+        )}
 
+        {step === 2 && (
         <FormSection title="Endereço">
           <Controller
             control={control}
@@ -117,10 +184,25 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
           <FormField label="Cidade *" error={errors.cidade?.message} {...register("cidade")} />
           <FormField label="Estado *" error={errors.estado?.message} {...register("estado")} />
         </FormSection>
+        )}
 
-        <Button type="submit" loading={isPending}>
-          Cadastrar
-        </Button>
+        {/* Botões de navegação */}
+        <div className="flex gap-3">
+          {step === 1 ? (
+            <Button type="button" onClick={goToNextStep}>
+              Próximo →
+            </Button>
+          ) : (
+            <>
+              <Button type="button" variant="outline" onClick={goToPreviousStep}>
+                ← Voltar
+              </Button>
+              <Button type="submit" loading={isPending}>
+                Cadastrar
+              </Button>
+            </>
+          )}
+        </div>
       </form>
     </div>
   );

@@ -19,6 +19,7 @@ import {
   ChevronLeft,
   ChevronRight,
   BarChart2,
+  MessageSquare,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -32,6 +33,7 @@ const baseModules = [
 const adminModules = [
   { href: "/pagamentos", label: "Pagamentos", icon: <CreditCard size={18} /> },
   { href: "/financeiro", label: "Financeiro", icon: <BarChart2 size={18} /> },
+  { href: "/whatsapp-logs", label: "WhatsApp Logs", icon: <MessageSquare size={18} /> },
   { href: "/usuarios", label: "Usuários", icon: <Shield size={18} /> },
   { href: "/planos", label: "Planos", icon: <ClipboardList size={18} /> },
 ];

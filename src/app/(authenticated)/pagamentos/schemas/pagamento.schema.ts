@@ -7,6 +7,7 @@ export const PagamentoSchema = z.object({
   paymentMethod: z.string().min(1, "Método de pagamento é obrigatório"),
   status: z.enum(["Pending", "Paid", "Cancelled"]),
   paidAt: z.string().optional(),
+  paymentDate: z.string().optional().nullable(),
 });
 
 export type PagamentoFormData = z.infer<typeof PagamentoSchema>;

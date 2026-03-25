@@ -15,3 +15,7 @@ export const PacienteSchema = z.object({
 });
 
 export type PacienteFormData = z.infer<typeof PacienteSchema>;
+
+// Campos de cada step para validação parcial
+export const step1Fields = ["name", "email", "cpf", "phone"] as const;
+export const step2Fields = ["rua", "numero", "bairro", "cidade", "estado", "cep"] as const;
