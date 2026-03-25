@@ -32,9 +32,10 @@ const paymentStatusOptions = [
 
 const paymentMethodOptions = [
   "Dinheiro",
+  "Cartão",
   "Cartão de Crédito",
   "Cartão de Débito",
-  "PIX",
+  "Pix",
   "Boleto",
   "Transferência",
 ];
@@ -60,6 +61,7 @@ export default function PagamentoDetails({ id, onBack, onSave }: Props) {
       referenceMonth: "",
       paymentMethod: "",
       status: "Pending",
+      paymentDate: null,
     },
   });
 
@@ -69,6 +71,7 @@ export default function PagamentoDetails({ id, onBack, onSave }: Props) {
   const referenceMonth = watch("referenceMonth");
   const paymentMethod = watch("paymentMethod");
   const paidAt = watch("paidAt");
+  const paymentDate = watch("paymentDate");
 
   const selectedPlan = planos.find((p) => p.id === planId);
 
@@ -87,12 +90,14 @@ export default function PagamentoDetails({ id, onBack, onSave }: Props) {
   useEffect(() => {
     if (data) {
       reset({
-        patientId: data.patientId,
-        planId: data.planId,
+        patientId:     data.patientId,
+        planId:        data.planId,
         referenceMonth: data.referenceMonth,
         paymentMethod: data.paymentMethod,
-        status: data.status,
-        paidAt: data.paidAt || "",
+        status:        data.status,
+        // input[type=date] exige "YYYY-MM-DD" — a API retorna ISO completo "2026-03-25T00:00:00Z"
+        paidAt:      data.paidAt      ? data.paidAt.split("T")[0]      : "",
+        paymentDate: data.paymentDate ? data.paymentDate.split("T")[0] : null,
       });
     }
   }, [data, reset]);
@@ -112,12 +117,13 @@ export default function PagamentoDetails({ id, onBack, onSave }: Props) {
     setIsEditing(false);
     if (data) {
       reset({
-        patientId: data.patientId,
-        planId: data.planId,
+        patientId:      data.patientId,
+        planId:         data.planId,
         referenceMonth: data.referenceMonth,
-        paymentMethod: data.paymentMethod,
-        status: data.status,
-        paidAt: data.paidAt || "",
+        paymentMethod:  data.paymentMethod,
+        status:         data.status,
+        paidAt:      data.paidAt      ? data.paidAt.split("T")[0]      : "",
+        paymentDate: data.paymentDate ? data.paymentDate.split("T")[0] : null,
       });
     }
   };
@@ -344,6 +350,19 @@ export default function PagamentoDetails({ id, onBack, onSave }: Props) {
               ))}
             </select>
           </div>
+
+          {/* Data de Vencimento (opcional) */}
+          <FormField
+            label="Data de Vencimento (opcional)"
+            id="paymentDate"
+            type="date"
+            disabled={!isEditing}
+            value={paymentDate || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              setValue("paymentDate", value ? value : null, { shouldValidate: true });
+            }}
+          />
 
           {/* Data de Pagamento */}
           {status === "Paid" && (
