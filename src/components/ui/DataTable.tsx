@@ -83,6 +83,7 @@ export function DataTable<T>({
                   className={`py-3 px-4 text-[#1a2a4a] ${col.className || ""}`}
                   style={{ fontFamily: "var(--font-serif)" }}
                 >
+                  {/*eslint-disable-next-line @typescript-eslint/no-explicit-any*/} 
                   {col.render ? col.render(row) : String((row as any)[col.key] ?? "")}
                 </td>
               ))}
