@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { ActionsDropdown } from "@/components/ui/ActionsDropdown";
 import { Eye, Power, Trash2, FileText, UserCircle } from "lucide-react";
 import { usePacientesPaginated, PacienteFilters } from "../hooks/pagined";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Pagination } from "@/components/ui/Pagination";
 import { usePacienteDelete } from "../hooks/delete";
 import { toast } from "sonner";
@@ -106,49 +107,7 @@ export default function PacienteList({ onCreate, onViewDetails, onVerProntuarios
     clearFilters();
   };
 
-  const getAppointmentStatusBadge = (status?: string) => {
-    if (!status) return <span className="text-gray-400">-</span>;
-    
-    const styles = {
-      Scheduled: "bg-blue-100 text-blue-700 border-blue-200",
-      Completed: "bg-green-100 text-green-700 border-green-200",
-      Cancelled: "bg-red-100 text-red-700 border-red-200",
-    };
 
-    const labels = {
-      Scheduled: "Agendado",
-      Completed: "Completo",
-      Cancelled: "Cancelado",
-    };
-
-    return (
-      <span className={`px-2 py-1 rounded-sm text-xs font-semibold border-2 ${styles[status as keyof typeof styles] || ""}`}>
-        {labels[status as keyof typeof labels] || status}
-      </span>
-    );
-  };
-
-  const getPaymentStatusBadge = (status?: string) => {
-    if (!status) return <span className="text-gray-400">-</span>;
-    
-    const styles = {
-      Pending: "bg-yellow-100 text-yellow-700 border-yellow-200",
-      Paid: "bg-green-100 text-green-700 border-green-200",
-      Cancelled: "bg-red-100 text-red-700 border-red-200",
-    };
-
-    const labels = {
-      Pending: "Pendente",
-      Paid: "Pago",
-      Cancelled: "Cancelado",
-    };
-
-    return (
-      <span className={`px-2 py-1 rounded-sm text-xs font-semibold border-2 ${styles[status as keyof typeof styles] || ""}`}>
-        {labels[status as keyof typeof labels] || status}
-      </span>
-    );
-  };
 
   const filterOptions: FilterOption[] = [
     {
@@ -172,12 +131,30 @@ export default function PacienteList({ onCreate, onViewDetails, onVerProntuarios
     {
       key: "appointmentStatus",
       label: "Status da Última Consulta",
-      render: (p) => getAppointmentStatusBadge(p.appointmentStatus),
+      render: (p) => (
+        <StatusBadge
+          status={p.appointmentStatus}
+          mapping={{
+            Scheduled: { label: "Agendado", className: "bg-blue-100 text-blue-700 border-blue-200" },
+            Completed: { label: "Completo", className: "bg-green-100 text-green-700 border-green-200" },
+            Cancelled: { label: "Cancelado", className: "bg-red-100 text-red-700 border-red-200" },
+          }}
+        />
+      ),
     },
     {
       key: "paymentStatus",
       label: "Status do Pagamento",
-      render: (p) => getPaymentStatusBadge(p.paymentStatus),
+      render: (p) => (
+        <StatusBadge
+          status={p.paymentStatus}
+          mapping={{
+            Pending: { label: "Pendente", className: "bg-yellow-100 text-yellow-700 border-yellow-200" },
+            Paid: { label: "Pago", className: "bg-green-100 text-green-700 border-green-200" },
+            Cancelled: { label: "Cancelado", className: "bg-red-100 text-red-700 border-red-200" },
+          }}
+        />
+      ),
     },
     {
       key: "isActive",
