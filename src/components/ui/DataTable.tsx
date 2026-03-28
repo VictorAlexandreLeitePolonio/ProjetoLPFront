@@ -1,5 +1,8 @@
 "use client";
 
+import { motion } from "motion/react";
+import { staggerContainerSlow, fadeSlideUp } from "@/lib/motion";
+
 export interface Column<T> {
   key: string;
   label: string;
@@ -62,10 +65,15 @@ export function DataTable<T>({
             ))}
           </tr>
         </thead>
-        <tbody>
+        <motion.tbody
+          variants={staggerContainerSlow}
+          initial="hidden"
+          animate="show"
+        >
           {data.map((row) => (
-            <tr 
+            <motion.tr 
               key={keyExtractor(row)} 
+              variants={fadeSlideUp}
               className={`border-b border-[#d0e8e6] hover:bg-[#f0f9f8] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
               onClick={() => onRowClick?.(row)}
             >
@@ -78,9 +86,9 @@ export function DataTable<T>({
                   {col.render ? col.render(row) : String((row as any)[col.key] ?? "")}
                 </td>
               ))}
-            </tr>
+            </motion.tr>
           ))}
-        </tbody>
+        </motion.tbody>
       </table>
     </div>
   );

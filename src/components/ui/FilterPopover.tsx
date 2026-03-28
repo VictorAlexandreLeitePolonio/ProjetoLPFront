@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Filter, X } from "lucide-react";
+import { slideDown } from "@/lib/motion";
 import { Button } from "./Button";
 
 export interface FilterOption {
@@ -57,7 +58,7 @@ export function FilterPopover({
         <Filter size={16} className="mr-2" />
         Filtros
         {hasActiveFilters && (
-          <span className="ml-2 w-5 h-5 rounded-full bg-[#1a4a3a] text-white text-xs flex items-center justify-center">
+          <span className="ml-2 w-5 h-5 rounded-full bg-[#5a9c94] text-white text-xs flex items-center justify-center">
             {Object.values(values).filter((v) => v !== "").length}
           </span>
         )}
@@ -74,10 +75,10 @@ export function FilterPopover({
               onClick={() => setIsOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ duration: 0.15 }}
+              variants={slideDown}
+              initial="hidden"
+              animate="show"
+              exit="exit"
               className="absolute top-full right-0 mt-2 w-80 bg-white rounded-sm border-2 border-[#1a2a4a] shadow-[6px_6px_0_0_#1a2a4a] z-50 p-4"
             >
               <div className="flex items-center justify-between mb-4">
@@ -107,8 +108,8 @@ export function FilterPopover({
                     <select
                       value={values[filter.key] || ""}
                       onChange={(e) => handleSelectChange(filter.key, e.target.value)}
-                      className="w-full px-3 py-2 bg-white border-2 border-[#e2ebe6] rounded-sm text-[#1a2a4a]
-                        focus:border-[#1a4a3a] focus:shadow-[2px_2px_0_0_#1a4a3a] focus:outline-none transition-all"
+                      className="w-full px-3 py-2 bg-[#fdfcfa] border-2 border-[#e2ebe6] rounded-sm text-[#1a2a4a]
+                        focus:border-[#5a9c94] focus:shadow-[2px_2px_0_0_#5a9c94] focus:outline-none transition-all"
                       style={{ fontFamily: "var(--font-serif)" }}
                     >
                       <option value="">Todos</option>

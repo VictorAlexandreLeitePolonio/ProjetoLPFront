@@ -19,7 +19,17 @@ export function SidebarLink({ href, label, icon, collapsed }: SidebarLinkProps) 
     <motion.div 
       whileHover={{ x: collapsed ? 0 : 2 }} 
       transition={{ type: "spring", stiffness: 300 }}
+      className="relative"
     >
+      {/* Indicador animado de item ativo */}
+      {isActive && (
+        <motion.div
+          layoutId="active-indicator"
+          className="absolute left-0 top-0 bottom-0 w-1 bg-[#5a9c94] rounded-full"
+          initial={false}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        />
+      )}
       <Link
         href={href}
         title={collapsed ? label : undefined}

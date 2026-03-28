@@ -2,12 +2,12 @@
 
 import { Appointment } from "@/types";
 import { motion } from "motion/react";
-import { fadeSlideUp } from "@/lib/motion";
+import { fadeSlideUp, hoverLift } from "@/lib/motion";
 import { Clock } from "lucide-react";
 
 const statusConfig = {
   Scheduled: { label: "Agendado", color: "bg-[#1a2a4a] text-white border-[#121d33]" },
-  Completed: { label: "Concluído", color: "bg-[#1a4a3a] text-white border-[#143d2f]" },
+  Completed: { label: "Concluído", color: "bg-[#5a9c94] text-white border-[#4a8880]" },
   Cancelled: { label: "Cancelado", color: "bg-red-700 text-white border-red-800" },
 };
 
@@ -21,11 +21,12 @@ export function AppointmentCard({ appointment }: { appointment: Appointment }) {
   return (
     <motion.div
       variants={fadeSlideUp}
-      className="bg-white rounded-sm border-2 border-[#e2ebe6] p-4 flex justify-between items-center hover:border-[#1a4a3a] transition-colors"
+      whileHover={hoverLift}
+      className="bg-white rounded-sm border-2 border-[#e2ebe6] p-4 flex justify-between items-center hover:border-[#5a9c94] transition-colors cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-sm bg-[#f0f4f2] border border-[#e2ebe6] flex items-center justify-center">
-          <Clock size={18} className="text-[#1a4a3a]" />
+          <Clock size={18} className="text-[#5a9c94]" />
         </div>
         <div>
           <p 

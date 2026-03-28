@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
+import { scaleIn } from "@/lib/motion";
 import { Button } from "./Button";
 
 interface DeleteConfirmDialogProps {
@@ -32,12 +33,18 @@ export function DeleteConfirmDialog({
             onClick={onClose}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed inset-0 flex items-center justify-center z-50 p-4"
           >
-            <div className="bg-white rounded-sm border-2 border-[#1a2a4a] shadow-[8px_8px_0_0_#1a2a4a] p-6 max-w-md w-full">
+            <motion.div
+              variants={scaleIn}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+              className="bg-white rounded-sm border-2 border-[#1a2a4a] shadow-[8px_8px_0_0_#1a2a4a] p-6 max-w-md w-full"
+            >
               <h2 
                 className="text-xl font-bold text-[#1a2a4a] mb-2"
                 style={{ fontFamily: "var(--font-serif)" }}
@@ -58,7 +65,7 @@ export function DeleteConfirmDialog({
                   {loading ? "Excluindo..." : "Excluir"}
                 </Button>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </>
       )}

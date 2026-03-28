@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { MoreVertical } from "lucide-react";
 import { createPortal } from "react-dom";
+import { hoverShift } from "@/lib/motion";
 
 interface ActionItem {
   label: string;
@@ -122,7 +123,7 @@ export function ActionsDropdown({ actions, label = "Ações" }: ActionsDropdownP
           initial={{ opacity: 0, y: -8, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.95 }}
-          transition={{ duration: 0.15 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
           style={{
             position: "fixed",
             top: position.top,
@@ -134,17 +135,18 @@ export function ActionsDropdown({ actions, label = "Ações" }: ActionsDropdownP
         >
           <div className="py-1">
             {actions.map((action, index) => (
-              <button
+              <motion.button
                 key={index}
                 onClick={() => handleAction(action)}
                 disabled={action.disabled}
+                whileHover={action.disabled ? {} : hoverShift}
                 className={`${buttonBaseStyles} ${variantStyles[action.variant || "default"]} 
                   ${action.disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 {action.icon && <span>{action.icon}</span>}
                 {action.label}
-              </button>
+              </motion.button>
             ))}
           </div>
         </motion.div>
@@ -160,8 +162,8 @@ export function ActionsDropdown({ actions, label = "Ações" }: ActionsDropdownP
         whileHover={{ x: -1, y: -1 }}
         whileTap={{ x: 2, y: 2 }}
         className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider
-          bg-white text-[#1a4a3a] border-2 border-[#1a4a3a] rounded-sm
-          shadow-[3px_3px_0_0_#1a4a3a] hover:bg-[#f0f4f2] transition-all"
+          bg-white text-[#5a9c94] border-2 border-[#5a9c94] rounded-sm
+          shadow-[3px_3px_0_0_#5a9c94] hover:bg-[#e8f4f3] transition-all"
         style={{ fontFamily: "var(--font-serif)" }}
       >
         <MoreVertical size={14} />
