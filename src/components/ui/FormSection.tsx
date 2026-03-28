@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { fadeSlideUp, staggerContainer } from "@/lib/motion";
+import { fadeSlideUp } from "@/lib/motion";
 
 interface FormSectionProps {
   title: string;
