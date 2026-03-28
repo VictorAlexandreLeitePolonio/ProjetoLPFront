@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import Cookies from "js-cookie";
 import { User } from "@/types";
 
@@ -13,30 +13,33 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-function getInitialUser(): User | null {
-  const stored = Cookies.get("auth_user");
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return null;
-    }
-  }
-  return null;
-}
+const COOKIE_OPTIONS = {
+  expires: 1 / 3, // 8 horas
+  sameSite: "strict" as const,
+  secure: process.env.NODE_ENV === "production",
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUserState] = useState<User | null>(getInitialUser);
-  const [initialLoading] = useState(false);
+  const [user, setUserState] = useState<User | null>(null);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  // Lê o cookie somente no cliente (após hidratação)
+  useEffect(() => {
+    const stored = Cookies.get("auth_user");
+    if (stored) {
+      try {
+        setUserState(JSON.parse(stored));
+      } catch {
+        Cookies.remove("auth_user");
+      }
+    }
+    setInitialLoading(false);
+  }, []);
 
   const setUser = (u: User | null) => {
     setUserState(u);
     if (u) {
-      Cookies.set("auth_user", JSON.stringify(u), {
-        expires: 1 / 3,
-        sameSite: "strict",
-        secure: false,
-      });
+      Cookies.set("auth_user", JSON.stringify(u), COOKIE_OPTIONS);
     } else {
       Cookies.remove("auth_user");
     }
