@@ -1,36 +1,36 @@
 "use client";
 
 import api from "@/lib/api";
+import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
-import { AxiosError } from "axios";
+import { User } from "@/types";
 
 interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface LoginUser {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
-
 interface LoginApiResponse {
   message: string;
-  user: LoginUser;
+  user: User;
 }
 
 interface UseLoginReturn {
   loginUser: (payload: LoginPayload) => Promise<{
     success: boolean;
-    user?: LoginUser;
+    user?: User;
     error?: string;
   }>;
   loading: boolean;
   error: string | null;
 }
+
+const COOKIE_OPTIONS = {
+  expires: 1 / 3,
+  sameSite: "strict" as const,
+  secure: process.env.NODE_ENV === "production",
+};
 
 export const useLogin = (): UseLoginReturn => {
   const [loading, setLoading] = useState(false);
@@ -44,20 +44,15 @@ export const useLogin = (): UseLoginReturn => {
       const response = await api.post<LoginApiResponse>("/api/Auth/login", payload);
       const { user } = response.data;
 
-      Cookies.set("auth_user", JSON.stringify(user), {
-        expires: 1 / 3,
-        sameSite: "strict",
-        secure: false,
-      });
+      Cookies.set("auth_user", JSON.stringify(user), COOKIE_OPTIONS);
 
       return { success: true, user };
-
     } catch (err) {
-      const axiosError = err as AxiosError;
+      // Usar axios.isAxiosError para validação em runtime (não cast inseguro)
       const errorMessage =
-        axiosError.response?.status === 401
+        axios.isAxiosError(err) && err.response?.status === 401
           ? "E-mail ou senha inválidos."
-          : "Erro de conexão. Tente novamente";
+          : "Erro de conexão. Tente novamente.";
 
       setError(errorMessage);
       return { success: false, error: errorMessage };
