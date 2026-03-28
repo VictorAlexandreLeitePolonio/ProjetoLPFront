@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
 import { MedicalRecord } from "@/types";
-import { toast } from "sonner";
-import { getApiErrorMessage } from "@/utils/apiError";
 
 export interface UpdateMedicalRecordDto {
   titulo?: string;
@@ -24,24 +22,24 @@ export interface UpdateMedicalRecordDto {
 }
 
 export function useProntuarioUpdate() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { mutate, isPending, error } = useApiMutation<
+    { id: number; data: UpdateMedicalRecordDto },
+    MedicalRecord
+  >({
+    mutationFn: ({ id, data }) =>
+      api.put<MedicalRecord>(`/api/medicalrecords/${id}`, data).then((r) => r.data),
+    errorMessage: "Erro ao atualizar prontuário.",
+  });
 
+  // Mantém a assinatura original: updateProntuario(id, data) → MedicalRecord | null
   const updateProntuario = async (
     id: number,
     data: UpdateMedicalRecordDto
   ): Promise<MedicalRecord | null> => {
-    setIsPending(true);
-    setError(null);
     try {
-      const response = await api.put<MedicalRecord>(`/api/medicalrecords/${id}`, data);
-      return response.data;
-    } catch (err) {
-      const message = getApiErrorMessage(err, "Erro ao atualizar prontuário.");
-      toast.error(message);
-      throw err;
-    } finally {
-      setIsPending(false);
+      return await mutate({ id, data });
+    } catch {
+      return null;
     }
   };
 

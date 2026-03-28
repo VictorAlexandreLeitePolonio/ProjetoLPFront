@@ -1,29 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { toast } from "sonner";
+import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
-import { getApiErrorMessage } from "@/utils/apiError";
 
 export function useUsuarioDelete() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const deleteUsuario = useCallback(async (id: number): Promise<void> => {
-    setIsPending(true);
-    setError(null);
-    try {
-      await api.delete(`/api/users/${id}`);
-    } catch (err) {
-      const message = getApiErrorMessage(err, "Erro ao excluir usuário");
-      const error = new Error(message);
-      setError(error);
-      toast.error(message);
-      throw err;
-    } finally {
-      setIsPending(false);
-    }
-  }, []);
-
+  const { mutate: deleteUsuario, isPending, error } = useApiMutation<number, void>({
+    mutationFn: (id) => api.delete(`/api/users/${id}`).then(() => undefined),
+    errorMessage: "Erro ao excluir usuário",
+  });
   return { deleteUsuario, isPending, error };
 }

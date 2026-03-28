@@ -1,27 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
-import { toast } from "sonner";
-import { getApiErrorMessage } from "@/utils/apiError";
 
 export function useProntuarioDelete() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const deleteProntuario = async (id: number): Promise<void> => {
-    setIsPending(true);
-    setError(null);
-    try {
-      await api.delete(`/api/medicalrecords/${id}`);
-    } catch (err) {
-      const message = getApiErrorMessage(err, "Erro ao excluir prontuário.");
-      toast.error(message);
-      throw err;
-    } finally {
-      setIsPending(false);
-    }
-  };
-
+  const { mutate: deleteProntuario, isPending, error } = useApiMutation<number, void>({
+    mutationFn: (id) => api.delete(`/api/medicalrecords/${id}`).then(() => undefined),
+    errorMessage: "Erro ao excluir prontuário.",
+  });
   return { deleteProntuario, isPending, error };
 }

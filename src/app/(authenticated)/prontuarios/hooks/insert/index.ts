@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
 import { MedicalRecord } from "@/types";
-import { toast } from "sonner";
-import { getApiErrorMessage } from "@/utils/apiError";
 
 export interface CreateMedicalRecordDto {
   patientId: number;
@@ -25,23 +23,23 @@ export interface CreateMedicalRecordDto {
 }
 
 export function useInsertProntuario() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { mutate: insertProntuario, isPending, error } = useApiMutation<
+    CreateMedicalRecordDto,
+    MedicalRecord
+  >({
+    mutationFn: (payload) =>
+      api.post<MedicalRecord>("/api/medicalrecords", payload).then((r) => r.data),
+    errorMessage: "Erro ao criar prontuário.",
+  });
 
-  const insertProntuario = async (data: CreateMedicalRecordDto): Promise<MedicalRecord | null> => {
-    setIsPending(true);
-    setError(null);
+  // Wrapper para manter compatibilidade com retorno null em caso de erro
+  const insertProntuarioWrapper = async (data: CreateMedicalRecordDto): Promise<MedicalRecord | null> => {
     try {
-      const response = await api.post<MedicalRecord>("/api/medicalrecords", data);
-      return response.data;
-    } catch (err) {
-      const message = getApiErrorMessage(err, "Erro ao criar prontuário.");
-      toast.error(message);
-      throw err;
-    } finally {
-      setIsPending(false);
+      return await insertProntuario(data);
+    } catch {
+      return null;
     }
   };
 
-  return { insertProntuario, isPending, error };
+  return { insertProntuario: insertProntuarioWrapper, isPending, error };
 }
