@@ -1,27 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
-import { toast } from "sonner";
-import { getApiErrorMessage } from "@/utils/apiError";
 
 export function useAgendaDelete() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const deleteAgenda = useCallback(async (id: number): Promise<void> => {
-    setIsPending(true);
-    setError(null);
-    try {
-      await api.delete(`/api/appointments/${id}`);
-    } catch (err) {
-      const message = getApiErrorMessage(err, "Erro ao cancelar agendamento. Tente novamente.");
-      toast.error(message);
-      throw err;
-    } finally {
-      setIsPending(false);
-    }
-  }, []);
-
+  const { mutate: deleteAgenda, isPending, error } = useApiMutation<number, void>({
+    mutationFn: (id) => api.delete(`/api/appointments/${id}`).then(() => undefined),
+    errorMessage: "Erro ao cancelar agendamento. Tente novamente.",
+  });
   return { deleteAgenda, isPending, error };
 }
