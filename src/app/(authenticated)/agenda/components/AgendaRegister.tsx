@@ -19,6 +19,15 @@ interface Props {
   onSave: () => void;
 }
 
+// Converte datetime-local para ISO preservando o fuso horário local
+const dateTimeLocalToIso = (dateTimeLocal: string): string => {
+  if (!dateTimeLocal) return "";
+  const [datePart, timePart] = dateTimeLocal.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hours, minutes] = timePart.split(":").map(Number);
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  return localDate.toISOString();
+};
 
 export default function AgendaRegister({ onBack, onSave }: Props) {
   const { insertAgenda, isPending } = useAgendaInsert();
@@ -67,7 +76,7 @@ export default function AgendaRegister({ onBack, onSave }: Props) {
       const payload = {
         ...data,
         userId: user.id,
-        appointmentDate: data.appointmentDate ? new Date(data.appointmentDate).toISOString() : "",
+        appointmentDate: data.appointmentDate ? dateTimeLocalToIso(data.appointmentDate) : "",
       };
       await insertAgenda(payload);
       toast.success("Agendamento criado com sucesso!");

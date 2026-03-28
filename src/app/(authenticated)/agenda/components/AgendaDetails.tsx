@@ -39,10 +39,16 @@ const isoToDateTimeLocal = (isoDate?: string): string => {
   }
 };
 
-// Converte datetime-local para ISO
+// Converte datetime-local para ISO preservando o fuso horário local
 const dateTimeLocalToIso = (dateTimeLocal: string): string => {
   if (!dateTimeLocal) return "";
-  return new Date(dateTimeLocal).toISOString();
+  // datetime-local tem formato "YYYY-MM-DDTHH:mm" sem fuso horário
+  // Construímos a data manualmente para preservar o horário local
+  const [datePart, timePart] = dateTimeLocal.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hours, minutes] = timePart.split(":").map(Number);
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  return localDate.toISOString();
 };
 
 export default function AgendaDetails({ id, onBack, onSave }: Props) {
