@@ -1,30 +1,23 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
 import { Patient } from "@/types";
 import { PacienteFormData } from "../../schemas/paciente.schema";
-import { toast } from "sonner";
-import { getApiErrorMessage } from "@/utils/apiError";
 
 export function usePacienteUpdate() {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const { mutate, isPending, error } = useApiMutation<
+    { id: number; payload: PacienteFormData },
+    Patient
+  >({
+    mutationFn: ({ id, payload }) =>
+      api.put<Patient>(`/api/patients/${id}`, payload).then((r) => r.data),
+    errorMessage: "Erro ao atualizar paciente. Tente novamente.",
+  });
 
-  const updatePaciente = useCallback(async (id: number, payload: PacienteFormData): Promise<Patient> => {
-    setIsPending(true);
-    setError(null);
-    try {
-      const response = await api.put<Patient>(`/api/patients/${id}`, payload);
-      return response.data;
-    } catch (err) {
-      const message = getApiErrorMessage(err, "Erro ao atualizar paciente. Tente novamente.");
-      toast.error(message);
-      throw err;
-    } finally {
-      setIsPending(false);
-    }
-  }, []);
+  // Mantém a assinatura original: updatePaciente(id, payload)
+  const updatePaciente = (id: number, payload: PacienteFormData) =>
+    mutate({ id, payload });
 
   return { updatePaciente, isPending, error };
 }
