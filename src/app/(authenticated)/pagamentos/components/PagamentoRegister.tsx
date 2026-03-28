@@ -86,9 +86,12 @@ export default function PagamentoRegister({ onBack, onSave }: Props) {
   }, []);
 
   const onSubmit = async (data: PagamentoFormData) => {
+    if (!user?.id) {
+      toast.error("Usuário não autenticado. Faça login novamente.");
+      return;
+    }
     try {
-      // userId vem do contexto de autenticação — não é preenchido pelo usuário no form.
-      await insertPagamento({ ...data, userId: user?.id ?? 0 });
+      await insertPagamento({ ...data, userId: user.id });
       toast.success("Pagamento cadastrado com sucesso!");
       onSave();
     } catch {
