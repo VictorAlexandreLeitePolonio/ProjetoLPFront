@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { ActionsDropdown } from "@/components/ui/ActionsDropdown";
 import { Eye, Trash2, Check, Minus } from "lucide-react";
 import { usePagamentosPaginated, PagamentoFilters } from "../hooks/pagined";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Pagination } from "@/components/ui/Pagination";
 import { usePagamentoDelete } from "../hooks/delete";
 import { Payment, Patient, PagedResult } from "@/types";
@@ -153,17 +154,14 @@ export default function PagamentoList({ onCreate, onViewDetails }: Props) {
       key: "status",
       label: "Status",
       render: (p) => (
-        <span
-          className={`px-2 py-1 rounded-sm text-xs font-semibold border-2 ${
-            p.status === "Paid"
-              ? "bg-[#1a4a3a] text-white border-[#143d2f]"
-              : p.status === "Pending"
-              ? "bg-yellow-100 text-yellow-700 border-yellow-200"
-              : "bg-red-100 text-red-700 border-red-200"
-          }`}
-        >
-          {p.status === "Paid" ? "Pago" : p.status === "Pending" ? "Pendente" : "Cancelado"}
-        </span>
+        <StatusBadge
+          status={p.status}
+          mapping={{
+            Paid: { label: "Pago", className: "bg-[#1a4a3a] text-white border-[#143d2f]" },
+            Pending: { label: "Pendente", className: "bg-yellow-100 text-yellow-700 border-yellow-200" },
+            Cancelled: { label: "Cancelado", className: "bg-red-100 text-red-700 border-red-200" },
+          }}
+        />
       ),
     },
     {

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { ActionsDropdown } from "@/components/ui/ActionsDropdown";
 import { Eye, CheckCircle, XCircle, Trash2, List, CalendarDays } from "lucide-react";
 import { useAgendaPaginated, AgendaFilters } from "../hooks/pagined";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Pagination } from "@/components/ui/Pagination";
 import { useAgendaDelete } from "../hooks/delete";
 import { toast } from "sonner";
@@ -100,27 +101,7 @@ export default function AgendaList({ onCreate, onViewDetails, viewMode = "list",
     setNewStatus(status);
   };
 
-  const getStatusBadge = (status?: string) => {
-    if (!status) return <span className="text-gray-400">-</span>;
-    
-    const styles = {
-      Scheduled: "bg-blue-100 text-blue-700 border-blue-200",
-      Completed: "bg-green-100 text-green-700 border-green-200",
-      Cancelled: "bg-red-100 text-red-700 border-red-200",
-    };
 
-    const labels = {
-      Scheduled: "Agendado",
-      Completed: "Completo",
-      Cancelled: "Cancelado",
-    };
-
-    return (
-      <span className={`px-2 py-1 rounded-sm text-xs font-semibold border-2 ${styles[status as keyof typeof styles] || ""}`}>
-        {labels[status as keyof typeof labels] || status}
-      </span>
-    );
-  };
 
   const formatDateTime = (dateString?: string) => {
     if (!dateString) return "-";
@@ -154,7 +135,16 @@ export default function AgendaList({ onCreate, onViewDetails, viewMode = "list",
     {
       key: "status",
       label: "Status",
-      render: (a) => getStatusBadge(a.status),
+      render: (a) => (
+        <StatusBadge
+          status={a.status}
+          mapping={{
+            Scheduled: { label: "Agendado", className: "bg-blue-100 text-blue-700 border-blue-200" },
+            Completed: { label: "Completo", className: "bg-green-100 text-green-700 border-green-200" },
+            Cancelled: { label: "Cancelado", className: "bg-red-100 text-red-700 border-red-200" },
+          }}
+        />
+      ),
     },
     {
       key: "actions",
