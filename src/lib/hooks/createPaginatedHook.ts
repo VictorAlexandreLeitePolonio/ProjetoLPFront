@@ -30,10 +30,10 @@ interface PaginatedHookConfig<T, F> {
  *     errorMessage: "Erro ao carregar pacientes.",
  *   });
  */
-export function createPaginatedHook<T, F extends Record<string, unknown> = Record<string, never>>(
+export function createPaginatedHook<T, F = Record<string, never>>(
   config: PaginatedHookConfig<T, F>
 ) {
-  return function usePaginatedQuery() {
+  return function usePaginatedQuery(initialFilters?: F) {
     const [result, setResult] = useState<PagedResult<T>>({
       data: [],
       page: 1,
@@ -44,7 +44,7 @@ export function createPaginatedHook<T, F extends Record<string, unknown> = Recor
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState("");
-    const [filters, setFilters] = useState<F>({} as F);
+    const [filters, setFilters] = useState<F>((initialFilters ?? {}) as F);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
