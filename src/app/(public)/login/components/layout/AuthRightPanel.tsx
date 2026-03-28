@@ -10,7 +10,7 @@ export function AuthRightPanel() {
     <div
       className="hidden md:flex w-1/2 min-h-screen relative overflow-hidden"
       style={{
-        background: "linear-gradient(135deg, #1a4a3a 0%, #1a2a4a 100%)",
+        background: "linear-gradient(135deg, #5a9c94 0%, #4a8880 100%)",
       }}
     >
       {/* Pattern overlay */}

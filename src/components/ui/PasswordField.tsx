@@ -46,7 +46,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             className={`w-full px-4 py-3 pr-12 border-2 rounded-sm transition-all duration-150
               ${disabled 
                 ? "bg-[#f0f4f2] border-[#e2ebe6] text-gray-400 cursor-not-allowed" 
-                : "bg-white border-[#e2ebe6] text-[#1a2a4a] placeholder:text-gray-400 focus:border-[#1a4a3a] focus:shadow-[3px_3px_0_0_#1a4a3a] focus:outline-none"
+                : "bg-[#fdfcfa] border-[#e2ebe6] text-[#1a2a4a] placeholder:text-gray-400 focus:border-[#5a9c94] focus:shadow-[3px_3px_0_0_#5a9c94] focus:outline-none"
               }
               ${error && !disabled ? "border-red-600 shadow-[3px_3px_0_0_#dc2626]" : ""}
             `}
@@ -57,7 +57,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             onClick={() => setShowPassword(!showPassword)}
             disabled={disabled}
             className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-sm transition-colors
-              ${disabled ? "text-gray-300 cursor-not-allowed" : "text-[#4a6354] hover:text-[#1a4a3a] hover:bg-[#f0f4f2]"}
+              ${disabled ? "text-gray-300 cursor-not-allowed" : "text-[#4a6354] hover:text-[#5a9c94] hover:bg-[#e8f4f3]"}
             `}
             tabIndex={-1}
           >

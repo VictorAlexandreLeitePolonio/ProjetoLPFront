@@ -58,29 +58,35 @@ export function Sidebar() {
     <motion.aside
       animate={{ width: collapsed ? 72 : 256 }}
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
-      className="flex flex-col min-h-screen bg-[#f0f4f2] border-r-2 border-[#1a2a4a] px-3 py-6 overflow-hidden"
+      className="flex flex-col min-h-screen bg-[#1e2d4a] border-r-2 border-[#121d33] px-3 py-6 overflow-hidden"
     >
       {/* Logo + botão colapsar */}
-      <div className={`flex items-center mb-8 px-1 ${collapsed ? "justify-center" : "justify-between"}`}>
+      <div className={`flex items-center mb-2 px-1 ${collapsed ? "justify-center" : "justify-between"}`}>
         {!collapsed && (
-          <div 
-            className="w-10 h-10 rounded-sm flex items-center justify-center"
-            style={{
-              background: "linear-gradient(135deg, #1a4a3a 0%, #143d2f 100%)",
-              border: "2px solid #1a2a4a",
-              boxShadow: "2px 2px 0 0 #1a2a4a",
-            }}
-          >
-           <Image src={logo} alt="Logo" width={40} height={40} className="object-contain" />
+          <div className="flex flex-col items-center gap-2 w-full">
+            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border-2 border-[#5a9c94] shadow-[0_0_0_3px_rgba(90,156,148,0.2)]">
+              <Image src={logo} alt="Logo" width={56} height={56} className="object-contain" />
+            </div>
+            <div className="text-center">
+              <p className="text-white text-xs font-bold tracking-widest uppercase" style={{ fontFamily: "var(--font-serif)" }}>
+                Dra. Laiza Polonio
+              </p>
+              <p className="text-[#5a9c94] text-[10px] tracking-widest uppercase">
+                Fisioterapeuta
+              </p>
+            </div>
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-sm text-[#1a2a4a] hover:bg-[#e2ebe6] transition-colors border border-transparent hover:border-[#1a2a4a]/20"
+          className={`p-1.5 rounded-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors border border-transparent hover:border-white/20 ${collapsed ? "" : "ml-auto"}`}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
+
+      {/* Separador */}
+      <div className="h-px bg-white/10 my-3 mx-2" />
 
       {/* Módulos */}
       <nav className="flex flex-col gap-1 flex-1">
@@ -90,14 +96,14 @@ export function Sidebar() {
       </nav>
 
       {/* Divisor */}
-      <div className="h-px bg-[#1a2a4a]/20 my-4 mx-2" />
+      <div className="h-px bg-white/10 my-4 mx-2" />
 
       {/* Sair */}
       <motion.button
         whileHover={{ x: collapsed ? 0 : 2 }}
         onClick={handleLogout}
         className={`flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-semibold uppercase tracking-wider
-          text-red-700 hover:bg-red-50 transition-colors border-2 border-transparent hover:border-red-200
+          text-white/60 hover:text-red-400 hover:bg-white/5 transition-colors border-2 border-transparent hover:border-red-400/30
           ${collapsed ? "justify-center" : ""}`}
         style={{ fontFamily: "var(--font-serif)" }}
         title={collapsed ? "Sair" : undefined}

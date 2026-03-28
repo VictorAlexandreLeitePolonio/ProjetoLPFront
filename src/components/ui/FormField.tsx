@@ -45,7 +45,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           className={`w-full px-4 py-3 border-2 rounded-sm transition-all duration-150
             ${disabled 
               ? "bg-[#f0f4f2] border-[#e2ebe6] text-gray-400 cursor-not-allowed" 
-              : "bg-white border-[#e2ebe6] text-[#1a2a4a] placeholder:text-gray-400 focus:border-[#1a4a3a] focus:shadow-[3px_3px_0_0_#1a4a3a] focus:outline-none"
+              : "bg-[#fdfcfa] border-[#e2ebe6] text-[#1a2a4a] placeholder:text-gray-400 focus:border-[#5a9c94] focus:shadow-[3px_3px_0_0_#5a9c94] focus:outline-none"
             }
             ${error && !disabled ? "border-red-600 shadow-[3px_3px_0_0_#dc2626]" : ""}
           `}

@@ -17,12 +17,15 @@ export function PageHeader({ title, onBack, actions }: PageHeaderProps) {
             ← Voltar
           </Button>
         )}
-        <h1 
-          className="text-2xl font-bold text-[#1a2a4a]"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
-          {title}
-        </h1>
+        <div>
+          <h1 
+            className="text-2xl font-bold text-[#1a2a4a]"
+            style={{ fontFamily: "var(--font-serif)" }}
+          >
+            {title}
+          </h1>
+          <div className="h-0.5 w-12 bg-[#5a9c94] mt-1 rounded-full" />
+        </div>
       </div>
       {actions && <div className="flex gap-2">{actions}</div>}
     </div>

@@ -22,9 +22,9 @@ export function Button({
   const baseStyles = "w-full py-3 px-6 rounded-sm font-semibold uppercase tracking-wider text-sm border-2 transition-all duration-150";
   
   const variants = {
-    primary: "bg-[#1a4a3a] text-white border-[#143d2f] shadow-[4px_4px_0_0_#143d2f] hover:bg-[#143d2f]",
+    primary: "bg-[#5a9c94] text-white border-[#4a8880] shadow-[4px_4px_0_0_#4a8880] hover:bg-[#4a8880]",
     secondary: "bg-[#1a2a4a] text-white border-[#121d33] shadow-[4px_4px_0_0_#121d33] hover:bg-[#121d33]",
-    outline: "bg-white text-[#1a4a3a] border-[#1a4a3a] shadow-[4px_4px_0_0_#1a4a3a] hover:bg-[#f0f4f2]",
+    outline: "bg-white text-[#5a9c94] border-[#5a9c94] shadow-[4px_4px_0_0_#5a9c94] hover:bg-[#e8f4f3]",
     danger: "bg-red-700 text-white border-red-800 shadow-[4px_4px_0_0_#7f1d1d] hover:bg-red-800",
   };
 
@@ -36,8 +36,8 @@ export function Button({
       whileTap={{ x: 4, y: 4, boxShadow: "0 0 0 0 transparent" }}
       disabled={loading || disabled}
       className={`${baseStyles} ${variants[variant]} 
-        disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#1a4a3a]
-        disabled:transform-none disabled:shadow-[4px_4px_0_0_#143d2f]`}
+        disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#5a9c94]
+        disabled:transform-none disabled:shadow-[4px_4px_0_0_#4a8880]`}
       style={{ fontFamily: "var(--font-serif)" }}
     >
       <AnimatePresence mode="wait">

@@ -26,12 +26,12 @@ export function SidebarLink({ href, label, icon, collapsed }: SidebarLinkProps) 
         className={`flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-all
           ${collapsed ? "justify-center" : ""}
           ${isActive
-            ? "bg-[#1a4a3a] text-white border-2 border-[#143d2f] shadow-[2px_2px_0_0_#143d2f]"
-            : "text-[#1a2a4a] hover:bg-[#e2ebe6] border-2 border-transparent"
+            ? "bg-[#5a9c94] text-white border-2 border-[#4a8880] shadow-[2px_2px_0_0_#4a8880]"
+            : "text-white/70 hover:bg-white/10 hover:text-white border-2 border-transparent"
           }`}
         style={{ fontFamily: "var(--font-serif)" }}
       >
-        {icon}
+        <span className={isActive ? "opacity-100" : "opacity-70"}>{icon}</span>
         {!collapsed && <span>{label}</span>}
       </Link>
     </motion.div>

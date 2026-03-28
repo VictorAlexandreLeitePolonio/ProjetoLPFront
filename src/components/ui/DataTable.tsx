@@ -47,14 +47,14 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto border-2 border-[#e2ebe6] rounded-sm">
+    <div className="overflow-x-auto border-2 border-[#d0e8e6] rounded-sm">
       <table className="w-full text-sm">
-        <thead className="bg-[#f0f4f2]">
-          <tr className="border-b-2 border-[#e2ebe6]">
+        <thead className="bg-[#e8f4f3]">
+          <tr className="border-b-2 border-[#d0e8e6]">
             {columns.map((col) => (
               <th 
                 key={col.key} 
-                className={`text-left py-3 px-4 font-semibold text-[#1a2a4a] uppercase text-xs tracking-wider ${col.className || ""}`}
+                className={`text-left py-3 px-4 font-semibold text-[#1e2d4a] uppercase text-xs tracking-wider ${col.className || ""}`}
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 {col.label}
@@ -66,7 +66,7 @@ export function DataTable<T>({
           {data.map((row) => (
             <tr 
               key={keyExtractor(row)} 
-              className={`border-b border-[#e2ebe6] hover:bg-[#f8faf9] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
+              className={`border-b border-[#d0e8e6] hover:bg-[#f0f9f8] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
               onClick={() => onRowClick?.(row)}
             >
               {columns.map((col) => (

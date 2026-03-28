@@ -13,7 +13,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       variants={slideFromLeft}
       initial="hidden"
       animate="show"
-      className="w-full md:w-1/2 min-h-screen bg-[#f8faf9] flex items-center justify-center p-6"
+      className="w-full md:w-1/2 min-h-screen bg-[#f7f5f1] flex items-center justify-center p-6"
     >
       <motion.div
         variants={staggerContainer}
