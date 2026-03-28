@@ -1,15 +1,15 @@
 // Formatadores para documentos brasileiros
 
 /**
- * Formata CPF: 11122233344 → 111.222.333-44
+ * Formata CPF progressivamente durante digitação: 111 → 111, 11122 → 111.22, 11122233344 → 111.222.333-44
  */
 export function formatCPF(cpf: string): string {
   if (!cpf) return "";
   const digits = cpf.replace(/\D/g, "").slice(0, 11);
-  return digits
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+  if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
 }
 
 /**
@@ -20,15 +20,15 @@ export function unformatCPF(cpf: string): string {
 }
 
 /**
- * Formata RG: 123456789 → 12.345.678-9
+ * Formata RG progressivamente durante digitação: 12 → 12, 12345 → 12.345, 123456789 → 12.345.678-9
  */
 export function formatRG(rg: string): string {
   if (!rg) return "";
   const digits = rg.replace(/\D/g, "").slice(0, 9);
-  return digits
-    .replace(/(\d{2})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d{1})$/, "$1-$2");
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 5) return `${digits.slice(0, 2)}.${digits.slice(2)}`;
+  if (digits.length <= 8) return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`;
+  return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}-${digits.slice(8)}`;
 }
 
 /**
