@@ -22,6 +22,10 @@ interface Props {
   onSave: () => void;
 }
 
+// Máximo 10MB para PDFs e imagens
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 export default function ProntuarioForm({ preselectedPatientId, onBack, onSave }: Props) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loadingPatients, setLoadingPatients] = useState(false);
@@ -44,6 +48,14 @@ export default function ProntuarioForm({ preselectedPatientId, onBack, onSave }:
     },
   });
 
+  // Limpa as Object URLs ao desmontar o componente (evita memory leak)
+  useEffect(() => {
+    return () => {
+      if (examePreview) URL.revokeObjectURL(examePreview);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const fetchPatients = async () => {
       setLoadingPatients(true);
@@ -65,20 +77,38 @@ export default function ProntuarioForm({ preselectedPatientId, onBack, onSave }:
 
   const handleContratoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type === "application/pdf") {
+    if (!file) return;
+    
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(`Arquivo muito grande. Máximo permitido: ${MAX_FILE_SIZE_MB}MB.`);
+      e.target.value = "";
+      return;
+    }
+    
+    if (file.type === "application/pdf") {
       setContratoFile(file);
     } else {
-      alert("Por favor, selecione um arquivo PDF.");
+      toast.error("Por favor, selecione um arquivo PDF.");
+      e.target.value = "";
     }
   };
 
   const handleExameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+    if (!file) return;
+    
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(`Arquivo muito grande. Máximo permitido: ${MAX_FILE_SIZE_MB}MB.`);
+      e.target.value = "";
+      return;
+    }
+    
+    if (file.type === "image/jpeg" || file.type === "image/png") {
       setExameFile(file);
       setExamePreview(URL.createObjectURL(file));
     } else {
-      alert("Por favor, selecione uma imagem JPG ou PNG.");
+      toast.error("Por favor, selecione uma imagem JPG ou PNG.");
+      e.target.value = "";
     }
   };
 
