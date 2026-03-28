@@ -48,13 +48,12 @@ export default function ProntuarioForm({ preselectedPatientId, onBack, onSave }:
     },
   });
 
-  // Limpa as Object URLs ao desmontar o componente (evita memory leak)
+  // Revoga a Object URL anterior sempre que examePreview muda (evita memory leak)
   useEffect(() => {
     return () => {
       if (examePreview) URL.revokeObjectURL(examePreview);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [examePreview]);
 
   useEffect(() => {
     const fetchPatients = async () => {

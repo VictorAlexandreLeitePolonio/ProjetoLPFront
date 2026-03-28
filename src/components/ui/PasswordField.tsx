@@ -39,7 +39,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             name={rest.name}
             type={showPassword ? "text" : "password"}
             disabled={disabled}
-            value={value || ""}
+            {...(value !== undefined ? { value } : {})}
             onChange={onChange}
             onBlur={onBlur}
             whileFocus={disabled ? undefined : { scale: 1.005 }}
