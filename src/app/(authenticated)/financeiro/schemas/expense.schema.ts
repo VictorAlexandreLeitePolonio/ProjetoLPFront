@@ -8,7 +8,7 @@ export const ExpenseSchema = z.object({
   referenceMonth: z
     .string()
     .min(1, "Mês de referência é obrigatório")
-    .regex(/^\d{2}\/\d{4}$/, "Formato inválido. Use MM/YYYY (ex: 03/2025)"),
+    .regex(/^\d{4}-\d{2}$/, "Formato inválido. Use YYYY-MM (ex: 2025-03)"),
 });
 
 export type ExpenseFormData = z.infer<typeof ExpenseSchema>;
