@@ -58,7 +58,7 @@ export function Sidebar() {
     <motion.aside
       animate={{ width: collapsed ? 72 : 256 }}
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
-      className="flex flex-col min-h-screen bg-[#1e2d4a] border-r-2 border-[#121d33] px-3 py-6 overflow-hidden"
+      className="flex flex-col h-screen sticky top-0 bg-[#1e2d4a] border-r-2 border-[#121d33] px-3 py-6 overflow-hidden"
     >
       {/* Logo + botão colapsar */}
       <div className={`flex items-center mb-2 px-1 ${collapsed ? "justify-center" : "justify-between"}`}>
