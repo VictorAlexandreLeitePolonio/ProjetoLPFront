@@ -65,7 +65,7 @@ export default function PagamentoList({ onCreate, onViewDetails }: Props) {
 
   const patientOptions = patients.map((p) => ({
     value: String(p.id),
-    label: p.name,
+    label: p.name?.trim() || `Paciente #${p.id}`,
   }));
 
   const filterOptions: FilterOption[] = [

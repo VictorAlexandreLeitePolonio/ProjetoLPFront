@@ -25,7 +25,7 @@ export default function ProntuarioCards({ patientId, onBack, onViewDetails, onCr
     const fetchPatient = async () => {
       try {
         const response = await api.get<Patient>(`/api/patients/${patientId}`);
-        setPatientName(response.data.name);
+        setPatientName(response.data?.name || "Paciente");
       } catch {
         setPatientName("Paciente");
       }
