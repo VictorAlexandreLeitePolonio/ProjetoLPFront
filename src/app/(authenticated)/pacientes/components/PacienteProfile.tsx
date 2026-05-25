@@ -16,6 +16,22 @@ interface Props {
   onBack: () => void;
 }
 
+const formatField = (value: string | null | undefined) => value?.trim() || "-";
+
+const formatAddress = (data: {
+  rua: string | null;
+  numero: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  estado: string | null;
+}) => {
+  const line1 = [data.rua, data.numero].filter(Boolean).join(", ");
+  const line2 = [data.bairro, data.cidade].filter(Boolean).join(", ");
+  const state = data.estado ?? null;
+  const address = [line1, line2 && state ? `${line2}/${state}` : line2 || state].filter(Boolean).join(" - ");
+  return address || "-";
+};
+
 export default function PacienteProfile({ id, onBack }: Props) {
   const { data, loading } = useGetPatientProfile(id);
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
@@ -157,7 +173,7 @@ export default function PacienteProfile({ id, onBack }: Props) {
       className="space-y-6"
     >
       <motion.div variants={fadeSlideUp}>
-        <PageHeader title={`Perfil: ${data.name}`} onBack={onBack} />
+        <PageHeader title={`Perfil: ${formatField(data.name)}`} onBack={onBack} />
       </motion.div>
 
       {/* Header Card */}
@@ -173,7 +189,7 @@ export default function PacienteProfile({ id, onBack }: Props) {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-[#1a2a4a]" style={{ fontFamily: "var(--font-serif)" }}>
-                  {data.name}
+                  {formatField(data.name)}
                 </h2>
                 <span
                   className={`px-2 py-0.5 rounded-sm text-xs font-semibold border-2 ${
@@ -188,20 +204,20 @@ export default function PacienteProfile({ id, onBack }: Props) {
               <div className="flex items-center gap-4 mt-2 text-sm text-[#4a6354]">
                 <span className="flex items-center gap-1">
                   <Phone size={14} />
-                  {formatPhone(data.phone)}
+                  {data.phone ? formatPhone(data.phone) : "-"}
                 </span>
                 <span>|</span>
-                <span>CPF: {formatCPF(data.cpf)}</span>
+                <span>CPF: {data.cpf ? formatCPF(data.cpf) : "-"}</span>
               </div>
               <div className="flex items-center gap-1 mt-1 text-sm text-[#4a6354]">
                 <MapPin size={14} />
-                {data.rua}, {data.numero} - {data.bairro}, {data.cidade}/{data.estado}
+                {formatAddress(data)}
               </div>
             </div>
           </div>
           <div className="text-right text-sm text-[#4a6354]">
             <p>Cadastrado em: {formatDate(data.createdAt)}</p>
-            <p className="mt-1">{data.email}</p>
+            <p className="mt-1">{formatField(data.email)}</p>
           </div>
         </div>
       </motion.div>

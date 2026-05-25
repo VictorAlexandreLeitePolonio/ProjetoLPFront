@@ -18,6 +18,11 @@ interface Props {
   onSave: () => void;
 }
 
+const toNullable = (value: string) => {
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+};
+
 export default function PacienteRegister({ onBack, onSave }: Props) {
   const { insertPaciente, isPending } = usePacienteInsert();
   const [step, setStep] = useState<1 | 2>(1);
@@ -35,11 +40,17 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
   const onSubmit = async (data: PacienteFormData) => {
     try {
       const payload = {
-        ...data,
-        cpf:   unformatCPF(data.cpf),
-        rg:    data.rg ? unformatRG(data.rg) : "",
-        phone: unformatPhone(data.phone),
-        cep:   unformatCEP(data.cep),
+        name: toNullable(data.name),
+        email: toNullable(data.email),
+        cpf: toNullable(unformatCPF(data.cpf)),
+        rg: data.rg ? toNullable(unformatRG(data.rg)) : null,
+        phone: data.phone ? toNullable(unformatPhone(data.phone)) : null,
+        rua: toNullable(data.rua),
+        numero: toNullable(data.numero),
+        bairro: toNullable(data.bairro),
+        cidade: toNullable(data.cidade),
+        estado: toNullable(data.estado),
+        cep: data.cep ? toNullable(unformatCEP(data.cep)) : null,
       };
       await insertPaciente(payload);
       toast.success("Paciente cadastrado com sucesso!");
@@ -117,15 +128,15 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {step === 1 && (
         <FormSection title="Dados Pessoais">
-          <FormField label="Nome *" error={errors.name?.message} {...register("name")} />
-          <FormField label="E-mail *" error={errors.email?.message} {...register("email")} />
+          <FormField label="Nome" error={errors.name?.message} {...register("name")} />
+          <FormField label="E-mail" error={errors.email?.message} {...register("email")} />
 
           <Controller
             control={control}
             name="cpf"
             render={({ field }) => (
               <FormField
-                label="CPF *"
+                label="CPF"
                 error={errors.cpf?.message}
                 value={field.value ?? ""}
                 onChange={(e) => field.onChange(maskCPF(e.target.value))}
@@ -152,7 +163,7 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
             name="phone"
             render={({ field }) => (
               <FormField
-                label="Telefone *"
+                label="Telefone"
                 error={errors.phone?.message}
                 value={field.value ?? ""}
                 onChange={(e) => field.onChange(maskPhone(e.target.value))}
@@ -170,7 +181,7 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
             name="cep"
             render={({ field }) => (
               <FormField
-                label="CEP *"
+                label="CEP"
                 error={errors.cep?.message}
                 value={field.value ?? ""}
                 onChange={(e) => field.onChange(maskCEP(e.target.value))}
@@ -178,11 +189,11 @@ export default function PacienteRegister({ onBack, onSave }: Props) {
               />
             )}
           />
-          <FormField label="Rua *" error={errors.rua?.message} {...register("rua")} />
-          <FormField label="Número *" error={errors.numero?.message} {...register("numero")} />
-          <FormField label="Bairro *" error={errors.bairro?.message} {...register("bairro")} />
-          <FormField label="Cidade *" error={errors.cidade?.message} {...register("cidade")} />
-          <FormField label="Estado *" error={errors.estado?.message} {...register("estado")} />
+          <FormField label="Rua" error={errors.rua?.message} {...register("rua")} />
+          <FormField label="Número" error={errors.numero?.message} {...register("numero")} />
+          <FormField label="Bairro" error={errors.bairro?.message} {...register("bairro")} />
+          <FormField label="Cidade" error={errors.cidade?.message} {...register("cidade")} />
+          <FormField label="Estado" error={errors.estado?.message} {...register("estado")} />
         </FormSection>
         )}
 

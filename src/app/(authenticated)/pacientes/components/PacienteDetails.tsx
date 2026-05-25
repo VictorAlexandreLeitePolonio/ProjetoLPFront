@@ -21,6 +21,11 @@ interface Props {
   onSave: () => void;
 }
 
+const toNullable = (value: string) => {
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+};
+
 export default function PacienteDetails({ id, onBack, onSave }: Props) {
   const { data, loading, error } = usePacienteById(id);
   const { updatePaciente, isPending } = usePacienteUpdate();
@@ -66,17 +71,17 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
   useEffect(() => {
     if (data) {
       reset({
-        name: data.name,
-        email: data.email,
-        cpf: data.cpf,
+        name: data.name ?? "",
+        email: data.email ?? "",
+        cpf: data.cpf ?? "",
         rg: data.rg || "",
-        phone: data.phone,
-        rua: data.rua,
-        numero: data.numero,
-        bairro: data.bairro,
-        cidade: data.cidade,
-        estado: data.estado,
-        cep: data.cep,
+        phone: data.phone ?? "",
+        rua: data.rua ?? "",
+        numero: data.numero ?? "",
+        bairro: data.bairro ?? "",
+        cidade: data.cidade ?? "",
+        estado: data.estado ?? "",
+        cep: data.cep ?? "",
       });
     }
   }, [data, reset]);
@@ -84,11 +89,17 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
   const onSubmit = async (formData: PacienteFormData) => {
     try {
       const payload = {
-        ...formData,
-        cpf: unformatCPF(formData.cpf),
-        rg: formData.rg ? unformatRG(formData.rg) : "",
-        cep: unformatCEP(formData.cep),
-        phone: unformatPhone(formData.phone),
+        name: toNullable(formData.name),
+        email: toNullable(formData.email),
+        cpf: formData.cpf ? toNullable(unformatCPF(formData.cpf)) : null,
+        rg: formData.rg ? toNullable(unformatRG(formData.rg)) : null,
+        phone: formData.phone ? toNullable(unformatPhone(formData.phone)) : null,
+        rua: toNullable(formData.rua),
+        numero: toNullable(formData.numero),
+        bairro: toNullable(formData.bairro),
+        cidade: toNullable(formData.cidade),
+        estado: toNullable(formData.estado),
+        cep: formData.cep ? toNullable(unformatCEP(formData.cep)) : null,
       };
       await updatePaciente(id, payload);
       toast.success("Paciente atualizado com sucesso!");
@@ -103,17 +114,17 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
     setIsEditing(false);
     if (data) {
       reset({
-        name: data.name,
-        email: data.email,
-        cpf: data.cpf,
+        name: data.name ?? "",
+        email: data.email ?? "",
+        cpf: data.cpf ?? "",
         rg: data.rg || "",
-        phone: data.phone,
-        rua: data.rua,
-        numero: data.numero,
-        bairro: data.bairro,
-        cidade: data.cidade,
-        estado: data.estado,
-        cep: data.cep,
+        phone: data.phone ?? "",
+        rua: data.rua ?? "",
+        numero: data.numero ?? "",
+        bairro: data.bairro ?? "",
+        cidade: data.cidade ?? "",
+        estado: data.estado ?? "",
+        cep: data.cep ?? "",
       });
     }
   };
@@ -200,7 +211,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <FormSection title="Dados Pessoais">
           <FormField
-            label="Nome *"
+            label="Nome"
             id="name"
             name="name"
             error={errors.name?.message}
@@ -209,7 +220,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             onChange={(e) => setValue("name", e.target.value, { shouldValidate: true })}
           />
           <FormField
-            label="E-mail *"
+            label="E-mail"
             id="email"
             name="email"
             error={errors.email?.message}
@@ -218,7 +229,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             onChange={(e) => setValue("email", e.target.value, { shouldValidate: true })}
           />
           <FormField
-            label="CPF *"
+            label="CPF"
             id="cpf"
             name="cpf"
             error={errors.cpf?.message}
@@ -241,7 +252,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             }}
           />
           <FormField
-            label="Telefone *"
+            label="Telefone"
             id="phone"
             name="phone"
             error={errors.phone?.message}
@@ -256,7 +267,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
 
         <FormSection title="Endereço">
           <FormField
-            label="CEP *"
+            label="CEP"
             id="cep"
             name="cep"
             error={errors.cep?.message}
@@ -268,7 +279,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             }}
           />
           <FormField
-            label="Rua *"
+            label="Rua"
             id="rua"
             name="rua"
             error={errors.rua?.message}
@@ -277,7 +288,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             onChange={(e) => setValue("rua", e.target.value, { shouldValidate: true })}
           />
           <FormField
-            label="Número *"
+            label="Número"
             id="numero"
             name="numero"
             error={errors.numero?.message}
@@ -286,7 +297,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             onChange={(e) => setValue("numero", e.target.value, { shouldValidate: true })}
           />
           <FormField
-            label="Bairro *"
+            label="Bairro"
             id="bairro"
             name="bairro"
             error={errors.bairro?.message}
@@ -295,7 +306,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             onChange={(e) => setValue("bairro", e.target.value, { shouldValidate: true })}
           />
           <FormField
-            label="Cidade *"
+            label="Cidade"
             id="cidade"
             name="cidade"
             error={errors.cidade?.message}
@@ -304,7 +315,7 @@ export default function PacienteDetails({ id, onBack, onSave }: Props) {
             onChange={(e) => setValue("cidade", e.target.value, { shouldValidate: true })}
           />
           <FormField
-            label="Estado *"
+            label="Estado"
             id="estado"
             name="estado"
             error={errors.estado?.message}

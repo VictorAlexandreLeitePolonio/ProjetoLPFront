@@ -3,11 +3,11 @@
 import { useApiMutation } from "@/lib/hooks/useApiMutation";
 import api from "@/lib/api";
 import { Patient } from "@/types";
-import { PacienteFormData } from "../../schemas/paciente.schema";
+import { PacientePayload } from "../../schemas/paciente.schema";
 
 export function usePacienteUpdate() {
   const { mutate, isPending, error } = useApiMutation<
-    { id: number; payload: PacienteFormData },
+    { id: number; payload: PacientePayload },
     Patient
   >({
     mutationFn: ({ id, payload }) =>
@@ -16,7 +16,7 @@ export function usePacienteUpdate() {
   });
 
   // Mantém a assinatura original: updatePaciente(id, payload)
-  const updatePaciente = (id: number, payload: PacienteFormData) =>
+  const updatePaciente = (id: number, payload: PacientePayload) =>
     mutate({ id, payload });
 
   return { updatePaciente, isPending, error };

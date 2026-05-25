@@ -59,17 +59,17 @@ export interface CreatePaymentDto {
 
 export interface Patient {
   id: number;
-  name: string;
-  email: string;
-  cpf: string;
-  rg: string;
-  phone: string;
-  rua: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-  cep: string;
+  name: string | null;
+  email: string | null;
+  cpf: string | null;
+  rg: string | null;
+  phone: string | null;
+  rua: string | null;
+  numero: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  estado: string | null;
+  cep: string | null;
   isActive: boolean;
   createdAt?: string;
   appointmentStatus?: "Scheduled" | "Completed" | "Cancelled";
@@ -144,17 +144,17 @@ export interface PatientProfilePayment {
 
 export interface PatientProfile {
   id: number;
-  name: string;
-  email: string;
-  cpf: string;
-  rg: string;
-  phone: string;
-  rua: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-  cep: string;
+  name: string | null;
+  email: string | null;
+  cpf: string | null;
+  rg: string | null;
+  phone: string | null;
+  rua: string | null;
+  numero: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  estado: string | null;
+  cep: string | null;
   isActive: boolean;
   createdAt: string;
   appointments: PatientProfileAppointment[];
